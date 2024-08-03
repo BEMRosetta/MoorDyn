@@ -8,7 +8,7 @@
 
 using namespace Upp;
 
-#define hiveFolder	"C:/Users/0203853/SENER/P0227668 HIVEWIND - Documentation/SENER Documentation/A8 HiveLab Engineering/02 Engineering/06. Numerical Models/02. GMA/90-Studies/52. Bladed_MoorDyn Stability"
+
 
 void BasicTest(UVector<double> &tm, UVector<UVector<double>> &positions, UVector<UVector<double>> &velocities) {
 	double t = 500;
@@ -31,7 +31,7 @@ void BasicTest(UVector<double> &tm, UVector<UVector<double>> &positions, UVector
 }
 
 void Calculation(UVector<double> &tm, UVector<UVector<double>> &positions, UVector<UVector<double>> &velocities) {
-	UVector<UVector<Value>> positionsV = ReadCSVFile(AFX(hiveFolder, "mooring/positions.csv"), ',', false, false, '.', false, 1);
+	UVector<UVector<Value>> positionsV = ReadCSVFile(AFX(systemFolder, "mooring/positions.csv"), ',', false, false, '.', false, 1);
 	if (positionsV.IsEmpty())
 		throw Exc("File not found");
 	if (positionsV[0].size() != 7)
@@ -96,7 +96,7 @@ void Calculation(UVector<double> &tm, UVector<UVector<double>> &positions, UVect
 		for (int c = 0; c < 6; ++c) 
 			str << "," << positions[r][c];
     }
-    if (!SaveFile(AFX(hiveFolder, "mooring/positions_new.csv"), str))
+    if (!SaveFile(AFX(systemFolder, "mooring/positions_new.csv"), str))
 		throw Exc("Problem saving translated positions");
 
 	velocities.SetCount(num);

@@ -1415,7 +1415,7 @@ int DECLDIR DrawWithGL()
 		LineList[l].drawGL2();  
 	for (int l=0; l< nConnects; l++)
 		ConnectList[l].drawGL();  
-	return 0;
 #endif
+	return 0;
 }
 

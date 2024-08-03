@@ -1,0 +1,14 @@
+description "2024 Hive problema MoorDyn\377";
+
+uses
+	Core,
+	Functions4U,
+	Surface,
+	MoorDyn_v1;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "";
+

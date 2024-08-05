@@ -3,7 +3,11 @@
 #include <Surface/Surface.h>
 #include <ScatterDraw/DataSource.h>
 
-#include <MoorDyn_v2/MoorDyn2.h>
+#ifdef flagMOORDYN_DLL
+	#include <MoorDyn_v2_DLL/MoorDyn2_lib.h>
+#else
+	#include <MoorDyn_v2/MoorDyn2.h>
+#endif
 
 using namespace Upp;
 
@@ -11,9 +15,38 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
+#ifdef PLATFORM_WIN32
+ #ifdef flagMOORDYN_DLL
+	Cout() << "Windows DLL ";
+ #else
+ 	Cout() << "Windows source ";
+ #endif
+ #ifdef _WIN64
+	Cout() << "64 bits";
+ #elif _WIN32
+	Cout() << "32 bits";
+ #else
+ 	Cout() << "Not supported";
+ #endif
+#elif PLATFORM_LINUX
+	Cout() << "Linux source ";
+#else
+	Cout() << "Not supported";
+#endif
+
 	MoorDyn system;
 	try {
-		String path = GetSourcesFolder("Mooring\\lines.txt");
+#ifdef flagMOORDYN_DLL
+		MoorDyn_v2_Load(AFX(GetSourceFolder(), 
+	#ifdef _WIN64
+			"../../MoorDyn_v2_DLL/bin/moorDyn.dll"
+	#else
+			"../../MoorDyn_v2_DLL/bin/XXX.dll"	// Not already included
+	#endif		
+		));
+#endif
+
+		String path = AFX(GetSourceFolder(), "mooring/lines.txt");
 		
 	    int err;
 	    system = MoorDyn_Create(path);

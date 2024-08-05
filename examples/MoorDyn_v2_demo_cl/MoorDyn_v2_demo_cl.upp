@@ -3,13 +3,16 @@ description "2024 Hive problema MoorDyn\377";
 uses
 	Core,
 	Functions4U,
-	Surface,
-	MoorDyn_v2;
+	Surface;
+
+uses(!MOORDYN_DLL) MoorDyn_v2;
+
+uses(MOORDYN_DLL) MoorDyn_v2_DLL;
 
 file
 	main.cpp;
 
 mainconfig
-	"" = "",
-	"" = "DLL";
+	"Use MoorDyn v2 source" = "",
+	"Use MoorDyn v2 DLL" = "MOORDYN_DLL";
 

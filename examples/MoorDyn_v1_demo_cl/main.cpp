@@ -139,6 +139,25 @@ void Calculation(UVector<double> &tm, UVector<UVector<double>> &positions, UVect
 
 CONSOLE_APP_MAIN
 {
+#ifdef PLATFORM_WIN32
+ #ifdef flagMOORDYN_DLL
+	Cout() << "Windows DLL ";
+ #else
+ 	Cout() << "Windows source ";
+ #endif
+ #ifdef _WIN64
+	Cout() << "64 bits";
+ #elif _WIN32
+	Cout() << "32 bits";
+ #else
+ 	Cout() << "Not supported";
+ #endif
+#elif PLATFORM_LINUX
+	Cout() << "Linux source ";
+#else
+	Cout() << "Not supported";
+#endif
+
 	try {
 		UVector<double> tm;
 		UVector<UVector<double>> positions, velocities;
@@ -148,11 +167,11 @@ CONSOLE_APP_MAIN
 	
 #ifdef flagMOORDYN_DLL
 		MoorDyn_v1_Load(AFX(GetSourceFolder(), 
-#ifdef _WIN64
-			"../../MoorDyn_v1/bin/MoorDyn_Win64.dll"
-#else
-			"../../MoorDyn_v1/bin/MoorDyn_Win32.dll"
-#endif		
+	#ifdef _WIN64
+			"../../MoorDyn_v1_DLL/bin/MoorDyn_Win64.dll"
+	#else
+			"../../MoorDyn_v1_DLL/bin/MoorDyn_Win32.dll"
+	#endif		
 		));
 #endif
 

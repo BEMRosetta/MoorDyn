@@ -1,9 +1,13 @@
 noblitz;
 
+uses
+	Eigen;
+
 include
 	.;
 
 file
+	Config.h,
 	Waves\SpectrumKin.cpp,
 	Waves\SpectrumKin.hpp,
 	Waves\WaveGrid.cpp,
@@ -18,7 +22,6 @@ file
 	Body.cpp,
 	_kiss_fft_guts.h,
 	Body.h,
-	Config.h,
 	Body.hpp,
 	IO.cpp,
 	IO.hpp,
@@ -56,4 +59,8 @@ file
 	Waves.h,
 	Waves.hpp,
 	MoorDyn.cpp;
+
+mainconfig
+	"" = "",
+	"" = "DLL";
 

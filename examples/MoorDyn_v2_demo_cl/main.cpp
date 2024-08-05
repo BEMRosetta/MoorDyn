@@ -39,9 +39,9 @@ CONSOLE_APP_MAIN
 #ifdef flagMOORDYN_DLL
 		MoorDyn_v2_Load(AFX(GetSourceFolder(), 
 	#ifdef _WIN64
-			"../../MoorDyn_v2_DLL/bin/moorDyn.dll"
+			"../../MoorDyn_v2_DLL/bin/MoorDyn_v2.dll"
 	#else
-			"../../MoorDyn_v2_DLL/bin/XXX.dll"	// Not already included
+			"../../MoorDyn_v2_DLL/bin/MoorDyn_v2_32.dll"
 	#endif		
 		));
 #endif
@@ -55,7 +55,7 @@ CONSOLE_APP_MAIN
 	
 	    // 3 coupled points x 3 components per point = 9 DoF
 	    double x[9], xd[9];
-	    memset(xd, 0.0, sizeof(double));
+	    memset(xd, 0, sizeof(double));
 	    // Get the initial positions from the system itself
 	    for (unsigned int i = 0; i < 3; i++) {
 	        // 4 = first fairlead id

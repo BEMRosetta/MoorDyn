@@ -16,7 +16,7 @@ using namespace Upp;
 void BasicTest(UVector<double> &tm, UVector<UVector<double>> &positions, UVector<UVector<double>> &velocities) {
 	double t = 500;
 	double ddt = 0.05;
-	int num = t/ddt+1;
+	int num = int(t/ddt+1);
 	tm.SetCount(num);
 	positions.SetCount(num);
 	velocities.SetCount(num);
@@ -175,6 +175,9 @@ CONSOLE_APP_MAIN
 		));
 #endif
 
+		
+		RealizeDirectory(AFX(GetExeFolder(), "mooring"));
+		FileCopy(AFX(GetSourceFolder(), "mooring/lines.txt"), AFX(GetExeFolder(), "mooring/lines.txt"));
 		
 		LinesInit(positions[0].begin(), velocities[0].begin());
 	    

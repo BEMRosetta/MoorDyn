@@ -128,7 +128,7 @@ class Line final : public io::IO
 	moordyn::SeafloorRef seafloor;
 
 	/// Number of line segments
-	unsigned int N;
+	/*unsigned*/ int N;
 	/// Unstretched line length
 	moordyn::real UnstrLen;
 	/// Unstretched line length at the beggining of the time step

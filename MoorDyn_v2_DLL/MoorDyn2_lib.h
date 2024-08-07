@@ -26,6 +26,8 @@ MOORDYN_LIB MoorDynLine(*MoorDyn_GetLine)(MoorDyn system, unsigned int l);
 MOORDYN_LIB int(*MoorDyn_GetLineNumberNodes)(MoorDynLine l, unsigned int* n);
 MOORDYN_LIB int(*MoorDyn_GetLineNodePos)(MoorDynLine l, unsigned int i, double pos[3]);
 MOORDYN_LIB int(*MoorDyn_GetLineNodeTen)(MoorDynLine l, unsigned int i, double ten[3]);
+MOORDYN_LIB int(*MoorDyn_NCoupledDOF)(MoorDyn system, unsigned int* n);
+MOORDYN_LIB int(*MoorDyn_GetLineFairTen)(MoorDynLine l, double* t);
 MOORDYN_LIB int(*MoorDyn_Close)(MoorDyn system);
 	
 #endif

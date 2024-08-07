@@ -148,7 +148,7 @@ class PMSpectrum : ParametricSpectrum
 	/// Significant wave height (meters)
 	real Hs;
 	/// Peak frequency (1 / peak period) (Hz)
-	real f_p;
+	//real f_p;
 };
 
 /**

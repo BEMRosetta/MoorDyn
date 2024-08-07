@@ -104,6 +104,20 @@ typedef Eigen::Matrix6f mat6;
 typedef mat3 mat;
 typedef Eigen::Quaternionf quaternion;
 #else
+
+
+struct ZeroVector3d : public Eigen::Matrix<double, 3, 1> {
+    ZeroVector3d() : Eigen::Matrix<double, 3, 1>(Eigen::Matrix<double, 3, 1>::Zero()) {}
+    ZeroVector3d(const Eigen::Matrix<double, 3, 1>& other) : Eigen::Matrix<double, 3, 1>(other) {}
+    ZeroVector3d& operator=(const Eigen::Matrix<double, 3, 1>& other) {
+        if (this != &other) {
+            this->Eigen::Matrix<double, 3, 1>::operator=(other);
+        }
+        return *this;
+    }
+};
+
+
 /// Real numbers wrapper. It is either double or float
 typedef double real;
 /// 2-D vector of real numbers

@@ -1,3 +1,5 @@
+description "MoorDyn v2 DLL packaged to be used bu U++\377";
+
 uses
 	Functions4U;
 

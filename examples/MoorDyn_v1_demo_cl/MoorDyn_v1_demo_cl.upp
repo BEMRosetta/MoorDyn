@@ -1,4 +1,4 @@
-description "2024 Hive problema MoorDyn\377";
+description "MoorDyn v1 demo in the command line\377";
 
 uses
 	Core,

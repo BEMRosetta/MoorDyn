@@ -52,8 +52,8 @@ using namespace waves;
 
 Line::Line(moordyn::Log* log, size_t lineId)
   : io::IO(log)
-  , lineId(lineId)
   , isPb(false)
+  , lineId(lineId)
 {
 }
 

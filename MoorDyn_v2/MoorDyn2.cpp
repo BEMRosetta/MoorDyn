@@ -752,7 +752,7 @@ MoorDyn::saveVTK(const char* filename) const
 moordyn::error_id
 moordyn::MoorDyn::ReadInFile()
 {
-	unsigned int i = 0;
+	/*unsigned */int i = 0;
 
 	// We are really interested in looking for the writeLog option, to start
 	// logging as soon as possible

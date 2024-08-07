@@ -1,3 +1,5 @@
+description "MoorDyn v2 packaged to be used bu U++\377";
+
 noblitz;
 
 uses
@@ -7,6 +9,8 @@ include
 	.;
 
 file
+	v1v2.cpp,
+	v1v2.h,
 	Config.h,
 	Waves\SpectrumKin.cpp,
 	Waves\SpectrumKin.hpp,

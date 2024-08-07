@@ -827,7 +827,7 @@ construct4DCurrentGrid(const std::string& folder,
 	}
 
 	// Read values into 4D array
-	for (int i = 6; i < lines.size(); i++) {
+	for (int i = 6; i < (int)lines.size(); i++) {
 		vector<string> entry = moordyn::str::split(lines[i]);
 
 		// Need to get indices (don't match coord values)

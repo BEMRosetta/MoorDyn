@@ -875,7 +875,7 @@ Rod::doRHS()
 	const real beta = angles.second;
 	const real sinPhi = sin(phi);
 	const real cosPhi = cos(phi);
-	const real tanPhi = tan(phi);
+	//const real tanPhi = tan(phi);
 	const real sinBeta = sin(beta);
 	const real cosBeta = cos(beta);
 

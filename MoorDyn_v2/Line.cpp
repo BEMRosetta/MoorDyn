@@ -552,7 +552,7 @@ Line::GetLineOutput(OutChanProps outChan)
 	else if (outChan.QType == VelZ)
 		return rd[outChan.NodeID][2];
 	else if (outChan.QType == Ten) {
-		if ((outChan.NodeID == 0) || (outChan.NodeID == N))
+		if ((outChan.NodeID == 0) || (outChan.NodeID == (int)N))
 			return getNodeForce(outChan.NodeID).norm();
 		return getNodeTen(outChan.NodeID).norm();
 	}

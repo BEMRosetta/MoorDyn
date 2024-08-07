@@ -37,6 +37,7 @@
 #include "Misc.hpp"
 #include "IO.hpp"
 #include "Seafloor.hpp"
+#include "Util/CFL.hpp"
 #include <utility>
 
 #ifdef USE_VTK
@@ -68,7 +69,7 @@ typedef std::shared_ptr<Waves> WavesRef;
  * The integration time step (moordyn::MoorDyn.dtM0) should be smaller than
  * this natural period to avoid numerical instabilities
  */
-class Line final : public io::IO
+class Line final : public io::IO, public NatFreqCFL
 {
   public:
 	/** @brief Constructor
@@ -128,10 +129,10 @@ class Line final : public io::IO
 	moordyn::SeafloorRef seafloor;
 
 	/// Number of line segments
-	/*unsigned*/ int N;
+	unsigned int N;
 	/// Unstretched line length
 	moordyn::real UnstrLen;
-	/// Unstretched line length at the beggining of the time step
+	/// Unstretched line length at the beginning of the time step
 	moordyn::real UnstrLen0;
 	/// Unstretched line length rate of change
 	moordyn::real UnstrLend;
@@ -706,7 +707,7 @@ class Line final : public io::IO
 
 	/** @brief Get line output
 	 *
-	 * This funtion is useful when outputs are set in the line properties
+	 * This function is useful when outputs are set in the line properties
 	 * @param outChan The output channel/field
 	 * @return The output value, 0.0 if a non-valid field is set
 	 */
@@ -855,7 +856,7 @@ class Line final : public io::IO
 	vec getEndSegmentMoment(EndPoints end_point, EndPoints rod_end_point) const;
 
 	/** @brief Calculate forces and get the derivative of the line's states
-	 * @return The velocties of the internal nodes (first) and the accelerations
+	 * @return The velocities of the internal nodes (first) and the accelerations
 	 * of the internal nodes (second)
 	 * @throws nan_error If nan values are detected in any node position
 	 */
@@ -904,11 +905,6 @@ class Line final : public io::IO
 	 * any other error
 	 */
 	void saveVTK(const char* filename) const;
-#endif
-
-#ifdef USEGL
-	void drawGL(void);
-	void drawGL2(void);
 #endif
 };
 

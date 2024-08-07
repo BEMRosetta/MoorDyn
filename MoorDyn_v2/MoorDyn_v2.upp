@@ -9,8 +9,6 @@ include
 	.;
 
 file
-	v1v2.cpp,
-	v1v2.h,
 	Config.h,
 	Waves\SpectrumKin.cpp,
 	Waves\SpectrumKin.hpp,

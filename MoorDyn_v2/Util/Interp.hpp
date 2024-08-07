@@ -135,8 +135,8 @@ interp(const std::vector<Tx>& xp, const std::vector<Ty>& yp, Tx x)
  * @param values The available data
  * @param i The upper bound index in the x direction
  * @param j The upper bound index in the y direction
- * @param fx The linear interplation factor in the x direction
- * @param fy The linear interplation factor in the y direction
+ * @param fx The linear interpolation factor in the x direction
+ * @param fy The linear interpolation factor in the y direction
  * @return The linearly interpolated value
  * @see interp_factor
  */
@@ -167,9 +167,9 @@ interp2(const std::vector<std::vector<T>>& values,
  * @param i The upper bound index in the x direction
  * @param j The upper bound index in the y direction
  * @param k The upper bound index in the z direction
- * @param fx The linear interplation factor in the x direction
- * @param fy The linear interplation factor in the y direction
- * @param fz The linear interplation factor in the z direction
+ * @param fx The linear interpolation factor in the x direction
+ * @param fy The linear interpolation factor in the y direction
+ * @param fz The linear interpolation factor in the z direction
  * @return The linearly interpolated value
  * @see interp_factor
  */
@@ -213,10 +213,10 @@ interp3(const std::vector<std::vector<std::vector<T>>>& values,
  * @param j The upper bound index in the y direction
  * @param k The upper bound index in the z direction
  * @param w The upper bound index in the w direction
- * @param fx The linear interplation factor in the x direction
- * @param fy The linear interplation factor in the y direction
- * @param fz The linear interplation factor in the z direction
- * @param fw The linear interplation factor in the w direction
+ * @param fx The linear interpolation factor in the x direction
+ * @param fy The linear interpolation factor in the y direction
+ * @param fz The linear interpolation factor in the z direction
+ * @param fw The linear interpolation factor in the w direction
  * @return The linearly interpolated value
  * @see interp_factor
  */

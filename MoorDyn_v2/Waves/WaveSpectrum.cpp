@@ -146,7 +146,7 @@ ParametricSpectrum::getAmplitudes(real minOmega, real maxOmega, real numComps)
 }
 PMSpectrum::PMSpectrum(real Hs, real f_p)
   : Hs(Hs)
-  //, f_p(f_p)
+  , f_p(f_p)
 {
 }
 

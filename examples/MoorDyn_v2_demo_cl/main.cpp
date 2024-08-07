@@ -4,6 +4,7 @@
 #include <ScatterDraw/DataSource.h>
 
 #ifdef flagMOORDYN_DLL
+	#include <MoorDyn_v2/MoorDyn2.hpp>
 	#include <MoorDyn_v2_DLL/MoorDyn2_lib.h>
 #else
 	#include <MoorDyn_v2/MoorDyn2.h>
@@ -192,7 +193,6 @@ void Demo() {
 	    moordyn::MoorDyn *sys = (moordyn::MoorDyn*)system;
 	    const vector<moordyn::Point*> points = sys->GetPoints();
 	    for (int i = 0; i < points.size(); ++i) {
-	        int typ = points[i]->type;
 			if (points[i]->type == moordyn::Point::COUPLED)
 				int kk = 1;
 	    }

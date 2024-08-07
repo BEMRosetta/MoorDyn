@@ -51,7 +51,6 @@
  * A set of handful definitions
  */
 
-
 #ifndef __MOORDYNAPI_H__
 #define __MOORDYNAPI_H__
 

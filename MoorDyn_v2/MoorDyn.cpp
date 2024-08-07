@@ -75,7 +75,7 @@ int OwnConsoleWindow = 0;
  */
 
 /// The singleton of the very only MoorDyn instance that this process might hold
-/// This only applies if the old API is cosidered. See @ref old_api
+/// This only applies if the old API is considered. See @ref old_api
 MoorDyn md_singleton = NULL;
 
 /**
@@ -280,12 +280,4 @@ GetNodePos(int LineNum, int NodeNum, double pos[3])
 		return MOORDYN_MEM_ERROR;
 	auto line = MoorDyn_GetLine(md_singleton, LineNum);
 	return MoorDyn_GetLineNodePos(line, NodeNum, pos);
-}
-
-int DECLDIR
-DrawWithGL()
-{
-	if (!md_singleton)
-		return MOORDYN_MEM_ERROR;
-	return MoorDyn_DrawWithGL(md_singleton);
 }

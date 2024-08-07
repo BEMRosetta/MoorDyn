@@ -166,20 +166,29 @@ CONSOLE_APP_MAIN
 		Calculation(tm, positions, velocities);
 	
 #ifdef flagMOORDYN_DLL
-		MoorDyn_v1_Load(AFX(GetSourceFolder(), 
+		String pathDLL;
+		if (GetFileTitle(GetSourceFolder()) == "MoorDyn_v1_demo_cl") 
 	#ifdef _WIN64
-			"../../MoorDyn_v1_DLL/bin/MoorDyn_Win64.dll"
+			pathDLL = "../../MoorDyn_v1_DLL/bin/MoorDyn_Win64.dll";
 	#else
-			"../../MoorDyn_v1_DLL/bin/MoorDyn_Win32.dll"
+			pathDLL = "../../MoorDyn_v1_DLL/bin/MoorDyn_Win32.dll";
 	#endif		
-		));
+		else
+	#ifdef _WIN64
+			pathDLL = "../../MoorDyn_v1_2_DLL/bin/MoorDyn_Win64.dll";
+	#else
+			pathDLL = "../../MoorDyn_v1_2_DLL/bin/MoorDyn_Win32.dll";
+	#endif		
+	
+		MoorDyn_v1_Load(AFX(GetSourceFolder(), pathDLL));
 #endif
 
 		
 		RealizeDirectory(AFX(GetExeFolder(), "mooring"));
 		FileCopy(AFX(GetSourceFolder(), "mooring/lines.txt"), AFX(GetExeFolder(), "mooring/lines.txt"));
 		
-		LinesInit(positions[0].begin(), velocities[0].begin());
+		if (LinesInit(positions[0].begin(), velocities[0].begin()) != 0)
+			throw Exc("Problem in LinesInit");
 	    
 	    double dt = tm[1] - tm[0];
 	    double Flines_dummy[6];
@@ -188,29 +197,43 @@ CONSOLE_APP_MAIN
 	    
 	    UVector<UVector<double>> forces(positions.size());
 	    
-	    BiquadFilter<double> f1, f2, f3;
-	    //Linear_IIR_Filter<double> f1, f2, f3;
-	    //f1.LowPassCoefficients(1/4., dt);
-	    //FIRFilter<double> f1, f2, f3;
-	    f1.LowPassCoefficients(1/3., dt, 1/sqrt(2));
-	    //f1.LowPassCoefficients(1/0.6, dt);
-	    f2 = clone(f1);
-	    f3 = clone(f1);
+	    bool filter = true;
+	    
+	    BiquadFilter<double> 
+	    //Linear_IIR_Filter<double>
+	    //FIRFilter<double>
+	    	f1, f2, f3;
+	    if (filter) {
+		    //f1.LowPassCoefficients(1/4., dt);
+		    f1.LowPassCoefficients(1/3., dt, 1/sqrt(2));
+		    //f1.LowPassCoefficients(1/0.6, dt);
+		    f2 = clone(f1);
+		    f3 = clone(f1);
+	    }
 	    
 	    for (int i = 0; i < positions.size(); ++i) {
 	        double t = tm[i];
 	        printf("\rt: %f", t);
 	        forces[i].SetCount(4);
 	        forces[i][0] = t;
-	    	LinesCalc(positions[i].begin(), velocities[i].begin(), Flines_dummy, &t, &dt);
-	    	forces[i][1] = f1.Filter(GetFairTen(1)/1000);
-	    	forces[i][2] = f2.Filter(GetFairTen(2)/1000);
-	    	forces[i][3] = f3.Filter(GetFairTen(3)/1000);
+	    	if (LinesCalc(positions[i].begin(), velocities[i].begin(), Flines_dummy, &t, &dt) != 0)
+	    		throw Exc("Problem in LinesCalc");
+	    	
+	    	if (filter) {
+	    		forces[i][1] = f1.Filter(GetFairTen(1)/1000);
+		    	forces[i][2] = f2.Filter(GetFairTen(2)/1000);
+		    	forces[i][3] = f3.Filter(GetFairTen(3)/1000);
+	    	} else {
+		    	forces[i][1] = GetFairTen(1)/1000;
+		    	forces[i][2] = GetFairTen(2)/1000;
+		    	forces[i][3] = GetFairTen(3)/1000;
+	    	}
 	    }
 	    
 	    Cout() << "\n";
 	    
-	    LinesClose();
+	    if (LinesClose() != 0)
+	        throw Exc("Problem in LinesClose");
 	    
 	    String str = "t,f1,f2,f3";
 	    for (int r = 0; r < positions.size(); ++r) {

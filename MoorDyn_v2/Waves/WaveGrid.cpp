@@ -20,7 +20,7 @@ namespace waves {
 
 /** @brief Carry out the inverse Fourier transform
  * @param cfg KISS FFT instance
- * @param nFFT Numer of fourier components
+ * @param nFFT Number of Fourier components
  * @param cx_w_in KISS FFT frequency-domain data
  * @param cx_t_out KISS FFT time-domain output
  * @param inputs Input FFT values
@@ -50,7 +50,7 @@ doIFFT(kiss_fftr_cfg cfg,
 
 	// copy out the IFFT data to the time series
 	for (unsigned int i = 0; i < nFFT; i++) {
-		// NOTE: is dividing by nFFT correct? (prevously was nw)
+		// NOTE: is dividing by nFFT correct? (previously was nw)
 		outputs[i] = cx_t_out[i] / (real)nFFT;
 	}
 
@@ -61,7 +61,7 @@ doIFFT(kiss_fftr_cfg cfg,
  * data (MORE RECENT)
  * @param zetaC0 Amplitude of each frequency component
  * @param nw Number of wave components
- * @param dw The difference in frequency between consequtive modes
+ * @param dw The difference in frequency between consecutive modes
  * @param g Gravity accelerations
  * @param h Water depth
  * @throws moordyn::mem_error If there were problems allocating memory

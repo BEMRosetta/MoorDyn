@@ -83,7 +83,7 @@ SpectrumKin::getWaveKin(vec3 pos,
 		for (unsigned int I = 0; I < omegas.size(); I++) {
 			real SINHNumOvrSIHNDen;
 			real COSHNumOvrSIHNDen;
-			real COSHNumOvrCOSHDen;
+			//real COSHNumOvrCOSHDen;
 			auto k = kValues[I];
 			real w = omegas[I];
 			if (k == 0.0) {
@@ -91,7 +91,7 @@ SpectrumKin::getWaveKin(vec3 pos,
 				// thus, the known value of unity is returned.
 				SINHNumOvrSIHNDen = 1.0;
 				COSHNumOvrSIHNDen = 99999.0;
-				COSHNumOvrCOSHDen = 1.0;
+				//COSHNumOvrCOSHDen = 1.0;
 			} else if (k * -avgDepth > 89.4) {
 				// The shallow water formulation will trigger a
 				// floating point overflow error; however, for h
@@ -100,14 +100,14 @@ SpectrumKin::getWaveKin(vec3 pos,
 				// deep water formulation instead.
 				SINHNumOvrSIHNDen = exp(k * stretched_z);
 				COSHNumOvrSIHNDen = exp(k * stretched_z);
-				COSHNumOvrCOSHDen = exp(k * stretched_z) +
-				                    exp(-k * (stretched_z + 2.0 * -avgDepth));
+				//COSHNumOvrCOSHDen = exp(k * stretched_z) +
+				//                    exp(-k * (stretched_z + 2.0 * -avgDepth));
 			} else if (-k * -avgDepth > 89.4) {
 				// @mth: added negative k case
 				// NOTE: CHECK CORRECTNESS
 				SINHNumOvrSIHNDen = -exp(-k * stretched_z);
 				COSHNumOvrSIHNDen = -exp(-k * stretched_z);
-				COSHNumOvrCOSHDen = -exp(-k * stretched_z) +
+				//COSHNumOvrCOSHDen = -exp(-k * stretched_z) +
 				                    exp(-k * (stretched_z + 2.0 * -avgDepth));
 			} else {
 				// shallow water formulation
@@ -115,8 +115,8 @@ SpectrumKin::getWaveKin(vec3 pos,
 				    sinh(k * (stretched_z + -avgDepth)) / sinh(k * -avgDepth);
 				COSHNumOvrSIHNDen =
 				    cosh(k * (stretched_z + -avgDepth)) / sinh(k * -avgDepth);
-				COSHNumOvrCOSHDen =
-				    cosh(k * (stretched_z + -avgDepth)) / cosh(k * -avgDepth);
+				//COSHNumOvrCOSHDen =
+				//    cosh(k * (stretched_z + -avgDepth)) / cosh(k * -avgDepth);
 			}
 			real u_xy = w * sin_waves[I] * COSHNumOvrSIHNDen;
 			real ux = u_xy * betas_x[I];

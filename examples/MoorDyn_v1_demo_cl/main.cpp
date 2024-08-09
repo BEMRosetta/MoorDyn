@@ -14,22 +14,19 @@ using namespace Upp;
 
 
 void BasicTest(UVector<double> &tm, UVector<UVector<double>> &positions, UVector<UVector<double>> &velocities) {
-	double t = 500;
-	double ddt = 0.05;
+	double t = 10;
+	double ddt = 0.001;
+	double vel = .5; 		// m/s
 	int num = int(t/ddt+1);
 	tm.SetCount(num);
 	positions.SetCount(num);
 	velocities.SetCount(num);
 	for (int r = 0; r < num; ++r) {
 		tm[r] = r*ddt;
-		positions[r].SetCount(6);		
-		velocities[r].SetCount(6);
-		for (int c = 0; c < 6; ++c) {
-			positions[r][c] = 0; 
-			velocities[r][c] = 0; 
-		}
-		//positions[r][0] = 22.5;
-		//positions[r][2] = 13.5;
+		positions[r].SetCount(6, 0);		
+		velocities[r].SetCount(6, 0);
+		positions[r][0] = vel*ddt*r;
+		velocities[r][0] = vel;
 	}	
 }
 
@@ -77,11 +74,12 @@ void Calculation(UVector<double> &tm, UVector<UVector<double>> &positions, UVect
 	
 	
 	positions.SetCount(num);
-	const Point3D pos(-22.498, 0, -13.585);
+	const Point3D pos(-22.498, 0, -13.585), 
+				  c0(0, 0, 0);
 	
 	for (int r = 0; r < num; ++r) {
-		Affine3d aff;
-		GetTransform000(aff, positions0[r][0], positions0[r][1], positions0[r][2], positions0[r][3], positions0[r][4], positions0[r][5]);
+		Affine3d aff = GetTransform(Vector3D(positions0[r][0], positions0[r][1], positions0[r][2]), 
+									Vector3D(positions0[r][3], positions0[r][4], positions0[r][5]), c0);
 		Point3D npos;
 		TransRot(aff, pos, npos);
 		positions[r].SetCount(6);
@@ -191,22 +189,23 @@ CONSOLE_APP_MAIN
 			throw Exc("Problem in LinesInit");
 	    
 	    double dt = tm[1] - tm[0];
-	    double Flines_dummy[6];
 	    
 	    Cout() << "\n";
 	    
-	    UVector<UVector<double>> forces(positions.size());
+	    UVector<UVector<double>> forces(positions.size()), fplat(positions.size());
 	    
-	    bool filter = true;
+	    bool filter = false;
 	    
-	    BiquadFilter<double> 
+	    //BiquadFilter<double> 
 	    //Linear_IIR_Filter<double>
 	    //FIRFilter<double>
+	    FFTFilter<double>
 	    	f1, f2, f3;
 	    if (filter) {
 		    //f1.LowPassCoefficients(1/4., dt);
-		    f1.LowPassCoefficients(1/3., dt, 1/sqrt(2));
+		    //f1.LowPassCoefficients(1/3., dt, 1/sqrt(2));
 		    //f1.LowPassCoefficients(1/0.6, dt);
+		    f1.Coefficients(1, Null, 10, dt);
 		    f2 = clone(f1);
 		    f3 = clone(f1);
 	    }
@@ -216,7 +215,8 @@ CONSOLE_APP_MAIN
 	        printf("\rt: %f", t);
 	        forces[i].SetCount(4);
 	        forces[i][0] = t;
-	    	if (LinesCalc(positions[i].begin(), velocities[i].begin(), Flines_dummy, &t, &dt) != 0)
+	        fplat[i].SetCount(9);
+	    	if (LinesCalc(positions[i].begin(), velocities[i].begin(), fplat[i].begin(), &t, &dt) != 0)
 	    		throw Exc("Problem in LinesCalc");
 	    	
 	    	if (filter) {
@@ -235,7 +235,7 @@ CONSOLE_APP_MAIN
 	    if (LinesClose() != 0)
 	        throw Exc("Problem in LinesClose");
 	    
-	    String str = "t,f1,f2,f3";
+	    String str = "t,f1,f2,f3,fx,fy,fz,frx,fry,frz";
 	    for (int r = 0; r < positions.size(); ++r) {
 			str << "\n";
 			for (int c = 0; c < 4; ++c) {
@@ -243,6 +243,8 @@ CONSOLE_APP_MAIN
 					str << ",";
 				str << forces[r][c];
 	        }
+	        for (int c = 0; c < 6; ++c) 
+	            str << "," << fplat[r][c]/1000;
 	    }
 	    if (!SaveFile(AFX(GetSourceFolder(), "mooring/forces.csv"), str))
 			throw Exc("Problem saving forces");

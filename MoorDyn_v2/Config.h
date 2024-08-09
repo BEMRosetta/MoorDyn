@@ -17,6 +17,8 @@
 #define MOORDYN_VERSION_STRING "2.3"
 #define MOORDYN_PATCH_VERSION	0
 
+//#define MOORDYN_SINGLEPRECISSION
+
 #ifndef flagDLL
 #define MoorDyn_EXPORTS
 #endif

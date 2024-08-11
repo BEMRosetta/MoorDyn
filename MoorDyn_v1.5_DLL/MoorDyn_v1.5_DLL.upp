@@ -1,0 +1,9 @@
+description "MoorDyn v1.5 DLL packaged to be used by U++\377";
+
+uses
+	Functions4U;
+
+file
+	..\MoorDyn_v1_DLL\MoorDyn_lib.cpp,
+	..\MoorDyn_v1_DLL\MoorDyn_lib.h;
+

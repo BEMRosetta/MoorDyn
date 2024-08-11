@@ -13,25 +13,8 @@
 using namespace Upp;
 
 
-void BasicTest(UVector<double> &tm, UVector<UVector<double>> &positions, UVector<UVector<double>> &velocities) {
-	double t = 10;
-	double ddt = 0.001;
-	double vel = .5; 		// m/s
-	int num = int(t/ddt+1);
-	tm.SetCount(num);
-	positions.SetCount(num);
-	velocities.SetCount(num);
-	for (int r = 0; r < num; ++r) {
-		tm[r] = r*ddt;
-		positions[r].SetCount(6, 0);		
-		velocities[r].SetCount(6, 0);
-		positions[r][0] = vel*ddt*r;
-		velocities[r][0] = vel;
-	}	
-}
-
 void Calculation(UVector<double> &tm, UVector<UVector<double>> &positions, UVector<UVector<double>> &velocities) {
-	UVector<UVector<Value>> positionsV = ReadCSVFile(AFX(GetSourceFolder(), "mooring/positions.csv"), ',', false, false, '.', false, 1);
+	UVector<UVector<Value>> positionsV = ReadCSVFile(AFX(GetExeFolder(), "mooring/positions.csv"), ',', false, false, '.', false, 1);
 	if (positionsV.IsEmpty())
 		throw Exc("File not found");
 	if (positionsV[0].size() != 7)
@@ -48,30 +31,6 @@ void Calculation(UVector<double> &tm, UVector<UVector<double>> &positions, UVect
 		for (int c = 3; c < 6; ++c) 
 			positions0[r][c] = ToRad(double(positionsV[r][c+1])); 
 	}	
-	
-	/*
-	VectorXd tm_ = Eigen::Map<VectorXd>(tm.begin(), num);
-	double srate = 0.05;
-	VectorXd ntm;
-	UArray<VectorXd> ndata(6);
-	for (int c = 0; c < 6; ++c) {
-		VectorXd data(num);
-		for (int r = 0; r < num; ++r) 
-			data[r] = positions0[r][c];
-			
-		Resample(tm_, data, ntm, ndata[c], srate);
-	}
-	num = ntm.size();
-	tm.SetCount(num);
-	tm_.resize(num);
-	positions0.SetCount(num);
-	for (int r = 0; r < num; ++r) {
-		tm[r] = tm_[r] = ntm[r];
-		positions0[r].SetCount(6);
-		for (int c = 0; c < 6; ++c) 
-			positions0[r][c] = ndata[c][r];
-	}*/
-	
 	
 	positions.SetCount(num);
 	const Point3D pos(-22.498, 0, -13.585), 
@@ -157,33 +116,35 @@ CONSOLE_APP_MAIN
 #endif
 
 	try {
-		UVector<double> tm;
-		UVector<UVector<double>> positions, velocities;
-		
-		//BasicTest(tm, positions, velocities);
-		Calculation(tm, positions, velocities);
-	
 #ifdef flagMOORDYN_DLL
 		String pathDLL;
 		if (GetFileTitle(GetSourceFolder()) == "MoorDyn_v1_demo_cl") 
 	#ifdef _WIN64
-			pathDLL = "../../MoorDyn_v1_DLL/bin/MoorDyn_Win64.dll";
+			pathDLL = "../../bin/MoorDyn_v1.dll";
 	#else
-			pathDLL = "../../MoorDyn_v1_DLL/bin/MoorDyn_Win32.dll";
+			pathDLL = "../../bin/MoorDyn_v1_32.dll";
 	#endif		
 		else
 	#ifdef _WIN64
-			pathDLL = "../../MoorDyn_v1_2_DLL/bin/MoorDyn_Win64.dll";
+			pathDLL = "../../bin/MoorDyn_v1.5.dll";
 	#else
-			pathDLL = "../../MoorDyn_v1_2_DLL/bin/MoorDyn_Win32.dll";
+			pathDLL = "../../bin/MoorDyn_v1.5_32.dll";
 	#endif		
 	
 		MoorDyn_v1_Load(AFX(GetSourceFolder(), pathDLL));
 #endif
 
+		UVector<double> tm;
+		UVector<UVector<double>> positions, velocities;
 		
-		RealizeDirectory(AFX(GetExeFolder(), "mooring"));
-		FileCopy(AFX(GetSourceFolder(), "mooring/lines.txt"), AFX(GetExeFolder(), "mooring/lines.txt"));
+		if (!RealizeDirectory(AFX(GetExeFolder(), "mooring")))
+			throw Exc(Format("Error creating 'mooring' folder: %s", GetLastErrorMessage()));
+		if (!FileCopy(AFX(GetSourceFolder(), "mooring/lines.txt"), AFX(GetExeFolder(), "mooring/lines.txt")))
+			throw Exc(Format("Error copying 'lines' file: %s", GetLastErrorMessage()));
+		if (!FileCopy(AFX(GetSourceFolder(), "mooring/positions.csv"), AFX(GetExeFolder(), "mooring/positions.csv")))
+			throw Exc(Format("Error copying 'positions' file: %s", GetLastErrorMessage()));
+		
+		Calculation(tm, positions, velocities);
 		
 		if (LinesInit(positions[0].begin(), velocities[0].begin()) != 0)
 			throw Exc("Problem in LinesInit");
@@ -194,22 +155,6 @@ CONSOLE_APP_MAIN
 	    
 	    UVector<UVector<double>> forces(positions.size()), fplat(positions.size());
 	    
-	    bool filter = false;
-	    
-	    //BiquadFilter<double> 
-	    //Linear_IIR_Filter<double>
-	    //FIRFilter<double>
-	    FFTFilter<double>
-	    	f1, f2, f3;
-	    if (filter) {
-		    //f1.LowPassCoefficients(1/4., dt);
-		    //f1.LowPassCoefficients(1/3., dt, 1/sqrt(2));
-		    //f1.LowPassCoefficients(1/0.6, dt);
-		    f1.Coefficients(1, Null, 10, dt);
-		    f2 = clone(f1);
-		    f3 = clone(f1);
-	    }
-	    
 	    for (int i = 0; i < positions.size(); ++i) {
 	        double t = tm[i];
 	        printf("\rt: %f", t);
@@ -219,15 +164,9 @@ CONSOLE_APP_MAIN
 	    	if (LinesCalc(positions[i].begin(), velocities[i].begin(), fplat[i].begin(), &t, &dt) != 0)
 	    		throw Exc("Problem in LinesCalc");
 	    	
-	    	if (filter) {
-	    		forces[i][1] = f1.Filter(GetFairTen(1)/1000);
-		    	forces[i][2] = f2.Filter(GetFairTen(2)/1000);
-		    	forces[i][3] = f3.Filter(GetFairTen(3)/1000);
-	    	} else {
-		    	forces[i][1] = GetFairTen(1)/1000;
-		    	forces[i][2] = GetFairTen(2)/1000;
-		    	forces[i][3] = GetFairTen(3)/1000;
-	    	}
+	    	forces[i][1] = GetFairTen(1)/1000;
+	    	forces[i][2] = GetFairTen(2)/1000;
+	    	forces[i][3] = GetFairTen(3)/1000;
 	    }
 	    
 	    Cout() << "\n";

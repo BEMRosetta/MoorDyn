@@ -1,0 +1,72 @@
+description "MoorDyn v1.5 packaged to be used in U++\377";
+
+noblitz;
+
+uses
+	Eigen,
+	Surface;
+
+include
+	.,
+	../MoorDyn_v2;
+
+file
+	v1_2.cpp,
+	v1_2.h,
+	..\MoorDyn_v2\MoorDyn.cpp,
+	..\MoorDyn_v2\MoorDyn.h,
+	..\MoorDyn_v2\Config.h,
+	..\MoorDyn_v2\Waves\SpectrumKin.cpp,
+	..\MoorDyn_v2\Waves\SpectrumKin.hpp,
+	..\MoorDyn_v2\Waves\WaveGrid.cpp,
+	..\MoorDyn_v2\Waves\WaveGrid.hpp,
+	..\MoorDyn_v2\Waves\WaveOptions.cpp,
+	..\MoorDyn_v2\Waves\WaveOptions.hpp,
+	..\MoorDyn_v2\Waves\WaveSpectrum.cpp,
+	..\MoorDyn_v2\Waves\WaveSpectrum.hpp,
+	..\MoorDyn_v2\Util\Interp.hpp,
+	..\MoorDyn_v2\Util\VTK_Util.cpp,
+	..\MoorDyn_v2\Util\VTK_Util.hpp,
+	..\MoorDyn_v2\Body.cpp,
+	..\MoorDyn_v2\_kiss_fft_guts.h,
+	..\MoorDyn_v2\Body.h,
+	..\MoorDyn_v2\Body.hpp,
+	..\MoorDyn_v2\IO.cpp,
+	..\MoorDyn_v2\IO.hpp,
+	..\MoorDyn_v2\kiss_fft.cpp,
+	..\MoorDyn_v2\kiss_fft.h,
+	..\MoorDyn_v2\kiss_fftr.cpp,
+	..\MoorDyn_v2\kiss_fftr.h,
+	..\MoorDyn_v2\Line.cpp,
+	..\MoorDyn_v2\Line.h,
+	..\MoorDyn_v2\Line.hpp,
+	..\MoorDyn_v2\Log.cpp,
+	..\MoorDyn_v2\Log.hpp,
+	..\MoorDyn_v2\Misc.cpp,
+	..\MoorDyn_v2\Misc.hpp,
+	..\MoorDyn_v2\MoorDyn2.cpp,
+	..\MoorDyn_v2\MoorDyn2.h,
+	..\MoorDyn_v2\MoorDyn2.hpp,
+	..\MoorDyn_v2\MoorDynAPI.h,
+	..\MoorDyn_v2\Point.cpp,
+	..\MoorDyn_v2\Point.h,
+	..\MoorDyn_v2\Point.hpp,
+	..\MoorDyn_v2\QSlines.hpp,
+	..\MoorDyn_v2\Rod.cpp,
+	..\MoorDyn_v2\Rod.h,
+	..\MoorDyn_v2\Rod.hpp,
+	..\MoorDyn_v2\Seafloor.cpp,
+	..\MoorDyn_v2\Seafloor.h,
+	..\MoorDyn_v2\Seafloor.hpp,
+	..\MoorDyn_v2\State.cpp,
+	..\MoorDyn_v2\State.hpp,
+	..\MoorDyn_v2\Time.cpp,
+	..\MoorDyn_v2\Time.hpp,
+	..\MoorDyn_v2\Waves.cpp,
+	..\MoorDyn_v2\Waves.h,
+	..\MoorDyn_v2\Waves.hpp;
+
+mainconfig
+	"" = "",
+	"" = "DLL";
+

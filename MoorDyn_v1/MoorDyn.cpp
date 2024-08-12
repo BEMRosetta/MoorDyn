@@ -1392,7 +1392,7 @@ int DECLDIR GetConnectForce(int l, double force[3])
 	else
 		return -1;
 }
-
+	
 
 int DECLDIR GetNodePos(int LineNum, int NodeNum, double pos[3])
 {

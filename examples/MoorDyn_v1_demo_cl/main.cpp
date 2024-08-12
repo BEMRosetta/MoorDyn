@@ -57,7 +57,7 @@ void Calculation(UVector<double> &tm, UVector<UVector<double>> &positions, UVect
 		for (int c = 0; c < 6; ++c) 
 			str << "," << positions[r][c];
     }
-    if (!SaveFile(AFX(GetSourceFolder(), "mooring/positions_new.csv"), str))
+    if (!SaveFile(AFX(GetExeFolder(), "mooring/positions_new.csv"), str))
 		throw Exc("Problem saving translated positions");
 
 	velocities.SetCount(num);
@@ -89,7 +89,7 @@ void Calculation(UVector<double> &tm, UVector<UVector<double>> &positions, UVect
 		for (int c = 0; c < 6; ++c) 
 			vstr << "," << velocities[r][c];
     }
-    if (!SaveFile(AFX(GetSourceFolder(), "mooring/velocities.csv"), vstr))
+    if (!SaveFile(AFX(GetExeFolder(), "mooring/velocities.csv"), vstr))
 		throw Exc("Problem saving translated positions");
 }
 
@@ -157,7 +157,7 @@ CONSOLE_APP_MAIN
 	    
 	    for (int i = 0; i < positions.size(); ++i) {
 	        double t = tm[i];
-	        printf("\rt: %f", t);
+
 	        forces[i].SetCount(4);
 	        forces[i][0] = t;
 	        fplat[i].SetCount(9);
@@ -185,7 +185,7 @@ CONSOLE_APP_MAIN
 	        for (int c = 0; c < 6; ++c) 
 	            str << "," << fplat[r][c]/1000;
 	    }
-	    if (!SaveFile(AFX(GetSourceFolder(), "mooring/forces.csv"), str))
+	    if (!SaveFile(AFX(GetExeFolder(), "mooring/forces.csv"), str))
 			throw Exc("Problem saving forces");
 	    
 	} catch (Exc e) {

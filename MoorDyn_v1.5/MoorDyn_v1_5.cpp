@@ -13,7 +13,7 @@
 #else
 	#include <MoorDyn_v2/MoorDyn2.h>
 	#include <MoorDyn_v2/MoorDyn2.hpp>
-	#include "v1_2.h"
+	#include "MoorDyn_v1_5.h"
 #endif
 
 using namespace Upp;
@@ -191,3 +191,27 @@ int LinesClose() noexcept {
 	return MoorDynClose();
 }
 
+int DECLDIR FairleadsCalc2(double rFairIn[], double rdFairIn[], double fFairIn[], double* t_in, double *dt_in) {
+	std::cout << "FairleadsCalc2() is not included";
+	return 0;
+}
+
+int DECLDIR FairleadsCalc(double **rFairIn, double **rdFairIn, double ** fFairIn, double* t_in, double *dt_in) {
+	std::cout << "FairleadsCalc() is not included";
+	return 0;
+}
+
+int DECLDIR GetConnectPos(int l, double pos[3]) {
+	return GetPointPos(l, pos);
+}
+
+int DECLDIR GetConnectForce(int l, double force[3]) {
+	return GetPointForce(l, force);
+}
+
+int DECLDIR DrawWithGL(void) {
+#ifdef USEGL
+	std::cout << "DrawWithGL() is not included";
+#endif
+	return 0;	
+}

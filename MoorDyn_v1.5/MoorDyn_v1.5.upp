@@ -11,8 +11,8 @@ include
 	../MoorDyn_v2;
 
 file
-	v1_2.cpp,
-	v1_2.h,
+	MoorDyn_v1_5.cpp,
+	MoorDyn_v1_5.h,
 	..\MoorDyn_v2\MoorDyn.cpp,
 	..\MoorDyn_v2\MoorDyn.h,
 	..\MoorDyn_v2\Config.h,

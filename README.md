@@ -2,7 +2,7 @@
   Authors: Iñaki Zabala.
   -->
 
-# MoorDyn testbench and package for U++
+# MoorDyn v1 and v2 testbench and packages for U++
 **MoorDyn is an advanced mooring model, designed to analyse the behaviour of advanced stationkeeping systems for offshore floating platforms and ships.**
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)

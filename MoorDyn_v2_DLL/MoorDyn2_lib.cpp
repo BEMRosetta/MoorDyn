@@ -24,4 +24,6 @@ void MoorDyn_v2_Load(const char *dllPath) {
 	MoorDyn_NCoupledDOF = (int(*)(MoorDyn system, unsigned int* n))dll.GetFunction_throw("MoorDyn_NCoupledDOF");
 	MoorDyn_GetLineFairTen = (int(*)(MoorDynLine l, double* t))dll.GetFunction_throw("MoorDyn_GetLineFairTen");
 	MoorDyn_Close = (int(*)(MoorDyn system))dll.GetFunction_throw("MoorDyn_Close");
+	MoorDyn_GetNumberPoints = (int(*)(MoorDyn system, unsigned int* n))dll.GetFunction_throw("MoorDyn_GetNumberPoints");
+	MoorDyn_GetPointType = (int(*)(MoorDynPoint point, int* t))dll.GetFunction_throw("MoorDyn_GetPointType");
 }

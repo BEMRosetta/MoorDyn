@@ -14,5 +14,6 @@ file
 
 mainconfig
 	"Use MoorDyn v2 source" = "",
-	"Use MoorDyn v2 DLL" = "MOORDYN_DLL";
+	"Use MoorDyn v2 DLL" = "MOORDYN_DLL",
+	"Use original MoorDyn v2 DLL" = "MOORDYN_DLL ORIGINAL";
 

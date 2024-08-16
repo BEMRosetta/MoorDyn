@@ -14,171 +14,12 @@
 using namespace Upp;
 
 
-#define TOL 1.0e-1
-
-bool
-compare(double v1, double v2, double tol)
-{
-	return fabs(v1 - v2) <= tol;
-}
-
-#define CHECK_VALUE(name, v1, v2, tol, t)                                      \
-	if (!compare(v1, v2, tol)) {                                               \
-		cerr << setprecision(8) << "Checking " << name                         \
-		     << " failed at t = " << t << " s. " << v1 << " was expected"      \
-		     << " but " << v2 << " was computed" << endl;                      \
-		MoorDyn_Close(system);                                                 \
-		return false;                                                          \
-	}
-
-using namespace std;
-
-
-void Calculation(UVector<double> &tm, UVector<UVector<double>> &positions, UVector<UVector<double>> &velocities) {
-	UVector<UVector<Value>> positionsV = ReadCSVFile(AFX(GetSourceFolder(), "mooring/positions.csv"), ',', false, false, '.', false, 1);
-	if (positionsV.IsEmpty())
-		throw Exc("File not found");
-	if (positionsV[0].size() != 7)
-		throw Exc("Wrong column mumber");
-	
-	int num = positionsV.size();
-	tm.SetCount(num);
-	UVector<UVector<double>> positions0(num);
-	for (int r = 0; r < num; ++r) {
-		tm[r] = positionsV[r][0]; 
-		positions0[r].SetCount(6);
-		for (int c = 0; c < 3; ++c) 
-			positions0[r][c] = positionsV[r][c+1]; 
-		for (int c = 3; c < 6; ++c) 
-			positions0[r][c] = ToRad(double(positionsV[r][c+1])); 
-	}	
-	
-	positions.SetCount(num);
-	const Point3D pos(-22.498, 0, -13.585);
-	
-	for (int r = 0; r < num; ++r) {
-		Affine3d aff;
-		GetTransform000(aff, positions0[r][0], positions0[r][1], positions0[r][2], positions0[r][3], positions0[r][4], positions0[r][5]);
-		Point3D npos;
-		TransRot(aff, pos, npos);
-		positions[r].SetCount(6);
-		positions[r][0] = npos[0];
-		positions[r][1] = npos[1];
-		positions[r][2] = npos[2];
-		positions[r][3] = positions0[r][3];
-		positions[r][4] = positions0[r][4];
-		positions[r][5] = positions0[r][5];
-	}
-	
-	String str = "t,x,y,z,rx,ry,rz";
-    for (int r = 0; r < num; ++r) {
-		str << "\n";
-		str << tm[r];
-		for (int c = 0; c < 6; ++c) 
-			str << "," << positions[r][c];
-    }
-    if (!SaveFile(AFX(GetSourceFolder(), "mooring/positions_new.csv"), str))
-		throw Exc("Problem saving translated positions");
-
-	velocities.SetCount(num);
-	for (int r = 0; r < num; ++r)
-		velocities[r].SetCount(6);	
-	
-	int deg = 2;
-	int wsize = 5;
-	int der = 1;
-	VectorXd tm_ = Eigen::Map<VectorXd>(tm.begin(), num);
-	for (int c = 0; c < 6; ++c) {
-		VectorXd resy, resx;
-		VectorXd y(num);
-		for (int r = 0; r < num; ++r)
-			y(r) = positions[r][c];
-		
-		if (!SavitzkyGolay(y, tm_, deg, wsize, der, resy, resx))
-			throw Exc("Problem in velocity calculation");
-		
-		for (int r = 0; r < num; ++r)
-			velocities[r][c] = resy(r);
-	}
-	velocities.SetCount(num);
-	
-	String vstr = "t,x,y,z,rx,ry,rz";
-    for (int r = 0; r < num; ++r) {
-		vstr << "\n";
-		vstr << tm_[r];
-		for (int c = 0; c < 6; ++c) 
-			vstr << "," << velocities[r][c];
-    }
-    if (!SaveFile(AFX(GetSourceFolder(), "mooring/velocities.csv"), vstr))
-		throw Exc("Problem saving translated positions");
-}
-/*
-void Positions() {
-	#ifdef flagMOORDYN_DLL
-		MoorDyn_v2_Load(AFX(GetSourceFolder(), 
-	#ifdef _WIN64
-			"../../MoorDyn_v2_DLL/bin/MoorDyn_v2.dll"
-	#else
-			"../../MoorDyn_v2_DLL/bin/MoorDyn_v2_32.dll"
-	#endif		
-		));
-	#endif
-	
+bool Demo(String linesPath) {
+	UVector<double> tensions;
 	MoorDyn system;
+	bool ret = true;
 	try {
-		UVector<double> tm;
-		UVector<UVector<double>> positions, velocities;
-
-		Calculation(tm, positions, velocities);
-
-		LinesInit(positions[0].begin(), velocities[0].begin());
-	    
-	    double dt = tm[1] - tm[0];
-	    double Flines_dummy[6];
-	    
-	    Cout() << "\n";
-	    
-	    UVector<UVector<double>> forces(positions.size());
-	       
-	    for (int i = 0; i < positions.size(); ++i) {
-	        double t = tm[i];
-	        printf("\rt: %f", t);
-	        forces[i].SetCount(4);
-	        forces[i][0] = t;
-	    	LinesCalc(positions[i].begin(), velocities[i].begin(), Flines_dummy, &t, &dt);
-	    	forces[i][1] = GetFairTen(1)/1000;
-	    	forces[i][2] = GetFairTen(2)/1000;
-	    	forces[i][3] = GetFairTen(3)/1000;
-	    }
-	    
-	    Cout() << "\n";
-	    
-	    LinesClose();
-	    
-	    String str = "t,f1,f2,f3";
-	    for (int r = 0; r < positions.size(); ++r) {
-			str << "\n";
-			for (int c = 0; c < 4; ++c) {
-				if (c > 0)
-					str << ",";
-				str << forces[r][c];
-	        }
-	    }
-	    if (!SaveFile(AFX(GetSourceFolder(), "mooring/forces.csv"), str))
-			throw Exc("Problem saving forces");
-	    
-	} catch (Exc e) {
-		Cout() << "\nError: " << e;	
-	}		
-}
-	*/	
-	
-void Demo() {
-	MoorDyn system;
-	try {
-		String path = AFX(GetSourceFolder(), "mooring/lines.txt");
-		
-		system = MoorDyn_Create(path);
+		system = MoorDyn_Create(linesPath);
 		if (!system)
 	    	throw Exc("MoorDyn_Create");
 
@@ -190,20 +31,25 @@ void Demo() {
 	    double x[9], xd[9];
 	    memset(xd, 0, 9*sizeof(double));
 	    
-	    moordyn::MoorDyn *sys = (moordyn::MoorDyn*)system;
-	    const vector<moordyn::Point*> points = sys->GetPoints();
-	    for (int i = 0; i < points.size(); ++i) {
-			if (points[i]->type == moordyn::Point::COUPLED)
-				int kk = 1;
-	    }
+	    unsigned int numPoints;
+	    if (MoorDyn_GetNumberPoints(system, &numPoints) != MOORDYN_SUCCESS)
+			throw Exc("MoorDyn_GetNumberPoints");
 	    
-	    // Get the initial positions from the system itself
-	    if (MoorDyn_GetPointPos(MoorDyn_GetPoint(system, 1), x) != MOORDYN_SUCCESS)
-	    	throw Exc("MoorDyn_GetPointPos");
-	    if (MoorDyn_GetPointPos(MoorDyn_GetPoint(system, 3), x + 3) != MOORDYN_SUCCESS)
-	    	throw Exc("MoorDyn_GetPointPos");
-	    if (MoorDyn_GetPointPos(MoorDyn_GetPoint(system, 5), x + 6) != MOORDYN_SUCCESS)
-	    	throw Exc("MoorDyn_GetPointPos");
+	    int ipos = 0;
+	    for (unsigned int i = 1; i <= numPoints; ++i) {
+	        MoorDynPoint point = MoorDyn_GetPoint(system, i);
+	        if (!point)
+				throw Exc("MoorDyn_GetPoint");
+	        int type;
+	        if (MoorDyn_GetPointType(point, &type) != MOORDYN_SUCCESS)
+				throw Exc("MoorDyn_GetNumberPoints");
+			if (type == moordyn::Point::COUPLED) {
+				// Get the initial positions from the system itself
+	    		if (MoorDyn_GetPointPos(MoorDyn_GetPoint(system, 1), x + ipos) != MOORDYN_SUCCESS)
+	    			throw Exc("MoorDyn_GetPointPos");
+	    		ipos += 3;
+			}
+	    }
 	
 	    // Setup the initial condition
 	    if (MoorDyn_Init(system, x, xd) != MOORDYN_SUCCESS)
@@ -228,9 +74,8 @@ void Demo() {
 		    if (MoorDyn_GetNumberLines(system, &n_lines) != MOORDYN_SUCCESS)
 		        throw Exc("MoorDyn_GetNumberLines");
 		    
-		    for (unsigned int i = 0; i < n_lines; i++) {
-		        const unsigned int line_id = i + 1;
-		        printf("Line %u\n", line_id);
+		    for (unsigned int line_id = 1; line_id <= n_lines; line_id++) {
+		        Cout() << Format("Line %d\n", (int)line_id);
 		        
 		        MoorDynLine line = MoorDyn_GetLine(system, line_id);
 		        if (!line)
@@ -240,68 +85,135 @@ void Demo() {
 		        if (MoorDyn_GetLineNumberNodes(line, &n_nodes) != MOORDYN_SUCCESS)
 		        	throw Exc("MoorDyn_GetLineNumberNodes");
 		        
-		        for (unsigned int j = 0; j < n_nodes; j++) {
-		            printf("node %u:\t", j);
+		        for (unsigned int inod = 0; inod < n_nodes; inod++) {
+		            Cout() << Format("node %d:\t", (int)inod);
 		            double pos[3], ten[3];
 		            
-		            if (MoorDyn_GetLineNodePos(line, j, pos) != MOORDYN_SUCCESS)
+		            if (MoorDyn_GetLineNodePos(line, inod, pos) != MOORDYN_SUCCESS)
 		            	throw Exc("MoorDyn_GetLineNodePos");
-		            printf("pos = [%g, %g, %g]\t", pos[0], pos[1], pos[2]);
+		            Cout() << Format("pos = [%g, %g, %g]\t", pos[0], pos[1], pos[2]);
 	
-		            if (MoorDyn_GetLineNodeTen(line, j, ten) != MOORDYN_SUCCESS)
+		            if (MoorDyn_GetLineNodeTen(line, inod, ten) != MOORDYN_SUCCESS)
 		                throw Exc("MoorDyn_GetLineNodeTen");
-		            printf("ten = [%g, %g, %g]  %g\n", ten[0], ten[1], ten[2], sqrt(sqr(ten[0]) + sqr(ten[1]) + sqr(ten[2])));
+		            Cout() << Format("ten = [%g, %g, %g]  %g\n", ten[0], ten[1], ten[2], sqrt(sqr(ten[0]) + sqr(ten[1]) + sqr(ten[2])));
 		        }
 				double tens;
 				if (MoorDyn_GetLineFairTen(line, &tens) != MOORDYN_SUCCESS)
 		        	throw Exc("MoorDyn_GetLineFairTen");
 		        
-				printf("fairtens = [%g]\n", tens);
+				Cout() << Format("fairtens = [%g]\n", tens);
+				tensions << tens;
 		    }
 	    }
 	} catch (Exc e) {
 		Cout() << "\nError: " << e;	
-	}
-	
+		ret = false;
+	} catch (const runtime_error &e) {
+		Cout() << "\nError: " << e.what();	
+		ret = false;
+	} catch (...) {
+		Cout() << "\nError.";	
+		ret = false;
+	}	 	
     // Alright, time to finish!
     if (system)
     	MoorDyn_Close(system);	
+    
+    if (!ret)
+        return false;
+    
+    const UVector<double> realtensions = {19494.7925879369, 245711860.898667, 245711860.898667, 13932.7732363972, 245710732.326922, 245710732.326922, 11456.9888200325, 245710965.150316, 245710965.150316, 9985.13119847774, 245711226.618707, 245711226.618707, 8985.3491290671, 245712140.409143, 245712140.409143, 8251.34292949198, 245723345.452046, 245723345.452046, 7684.17685668972, 245770240.265832, 245770240.265832, 7229.69791090904, 245835588.210278, 245835588.210278, 6855.42009832787, 245866376.325674, 245866376.325674};
+	VERIFY(CompareDecimals(realtensions, tensions, 3));
+	
+	return true;
 }
 
 CONSOLE_APP_MAIN
 {
+	Cout() << "MoorDyn v2 test running on ";
+	
+	const UVector<String>& command = CommandLine();
+	int cid = 0;
 #ifdef PLATFORM_WIN32
  #ifdef flagMOORDYN_DLL
-	Cout() << "Windows DLL ";
+	Cout() << "Windows and dynamically linked to a DLL ";
+	#ifndef flagORIGINAL
+		Cout() << "compiled in this project ";
+	#else
+		Cout() << "original from NREL ";
+	#endif	
  #else
- 	Cout() << "Windows source ";
+ 	Cout() << "Windows and statically linked (no DLL required) ";
  #endif
  #ifdef _WIN64
-	Cout() << "64 bits";
+	Cout() << " (64 bits)";
  #elif _WIN32
-	Cout() << "32 bits";
+	Cout() << " (32 bits)";
  #else
  	Cout() << "Not supported";
  #endif
 #elif PLATFORM_LINUX
-	Cout() << "Linux source ";
+	Cout() << "Linux and linking statically (no SO required) ";
 #else
 	Cout() << "Not supported";
 #endif
 	
-	#ifdef flagMOORDYN_DLL
-		MoorDyn_v2_Load(AFX(GetSourceFolder(), 
+	Cout() << "\nIf run standalone the command line options are ";
+		
+	try {	
+#ifdef flagMOORDYN_DLL
+			String pathDLL;
 	#ifdef _WIN64
-			"../../MoorDyn_v2_DLL/bin/MoorDyn_v2.dll"
+			#ifndef flagORIGINAL
+				pathDLL = AFX(GetSourceFolder(), "../../unittest/.test/DLL/MoorDyn_v2.dll");
+			#else
+				pathDLL = AFX(GetSourceFolder(), "../../unittest/.test/DLL/original/moordyn.dll");
+			#endif
 	#else
-			"../../MoorDyn_v2_DLL/bin/MoorDyn_v2_32.dll"
+			#ifndef flagORIGINAL
+				pathDLL = AFX(GetSourceFolder(), "../../unittest/.test/DLL/MoorDyn_v2_32.dll");
+			#else
+				throw Exc("Original 32 bits DLL is not available");
+			#endif
 	#endif		
-		));
-	#endif
+			Cout() << "<path to DLL> ";
+			if (!IsTheIDE() && command.size() > cid)
+				pathDLL = command[cid++];
+			MoorDyn_v2_Load(pathDLL);
+#endif
 	
-	Demo();
+		// Setting mooring folder
+		if (!RealizeDirectory(AFX(GetExeFolder(), "mooring")))
+			throw Exc(Format("Error creating 'mooring' folder: %s", GetLastErrorMessage()));
+		
+		String linesPath;
+		if (!IsTheIDE()) {
+			if (command.size() > cid)
+				linesPath = command[cid++];
+			else
+				throw Exc("Path to lines.txt file not found");
+		} else
+			linesPath = AFX(GetSourceFolder(), "mooring/lines.txt");
 	
+		String newLinesPath = AFX(GetExeFolder(), "mooring/lines.txt");
+		if (!FileCopy(linesPath, newLinesPath))
+			throw Exc(Format("Error copying 'lines' file  from '%s' to '%s': %s", linesPath, newLinesPath, GetLastErrorMessage()));
+		linesPath = newLinesPath;
+		
+		Cout() << "<path to mooring definition (previously called 'lines.txt')>\n";
+		
+		if (Demo(linesPath))
+			Cout() << "\nAll test passed";
+		else
+			SetExitCode(-1);	
+	} catch (Exc e) {
+		Cout() << "\nError: " << e;	
+		SetExitCode(-1);
+	}
+	
+#ifdef flagDEBUG
     Cout() << "\nPress enter to end";
 	ReadStdIn();
+#endif
 }
 

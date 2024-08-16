@@ -1,7 +1,7 @@
 #ifndef _MoorDyn_v1_DLL_MoorDyn_lib_h_
 #define _MoorDyn_v1_DLL_MoorDyn_lib_h_
 
-#include "../MoorDyn_v2/MoorDynAPI.h"
+//#include "../MoorDyn_v2/MoorDynAPI.h"
 
 void MoorDyn_v2_Load(const char *dllPath);
 
@@ -29,5 +29,7 @@ MOORDYN_LIB int(*MoorDyn_GetLineNodeTen)(MoorDynLine l, unsigned int i, double t
 MOORDYN_LIB int(*MoorDyn_NCoupledDOF)(MoorDyn system, unsigned int* n);
 MOORDYN_LIB int(*MoorDyn_GetLineFairTen)(MoorDynLine l, double* t);
 MOORDYN_LIB int(*MoorDyn_Close)(MoorDyn system);
+MOORDYN_LIB int (*MoorDyn_GetNumberPoints)(MoorDyn system, unsigned int* n);
+MOORDYN_LIB int (*MoorDyn_GetPointType)(MoorDynPoint point, int* t);
 	
 #endif

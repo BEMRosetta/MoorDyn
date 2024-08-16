@@ -5,9 +5,9 @@ uses
 	Functions4U,
 	Surface;
 
-uses(MOORDYN_DLL) MoorDyn_v1.5_DLL;
+uses(MOORDYN_DLL) MoorDyn_v1_5_DLL;
 
-uses(!MOORDYN_DLL) MoorDyn_v1.5;
+uses(!MOORDYN_DLL) MoorDyn_v1_5;
 
 file
 	..\MoorDyn_v1_demo_cl\main.cpp;

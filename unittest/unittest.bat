@@ -2,47 +2,47 @@
 @del .\.test\DLL\*.* /q
 
 @title Compiling MoorDyn DLL
-umk Anboto MoorDyn_v1 CLANGX64   +DLL  -r	.test/DLL/MoorDyn_v1.dll  		
+umk BEMRosetta MoorDyn/MoorDyn_v1 CLANGX64   +DLL  -r	.test/DLL/MoorDyn_v1.dll  		
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto MoorDyn_v1 CLANG      +DLL  -r	.test/DLL/MoorDyn_v1_32.dll  		
+umk BEMRosetta MoorDyn/MoorDyn_v1 CLANG      +DLL  -r	.test/DLL/MoorDyn_v1_32.dll  		
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto MoorDyn_v1_5 CLANGX64 +DLL  -r	.test/DLL/MoorDyn_v1_5.dll  		
+umk BEMRosetta MoorDyn/MoorDyn_v1_5 CLANGX64 +DLL  -r	.test/DLL/MoorDyn_v1_5.dll  		
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto MoorDyn_v1_5 CLANG    +DLL  -r	.test/DLL/MoorDyn_v1_5_32.dll  		
+umk BEMRosetta MoorDyn/MoorDyn_v1_5 CLANG    +DLL  -r	.test/DLL/MoorDyn_v1_5_32.dll  		
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto MoorDyn_v2 CLANGX64   +DLL  -r	.test/DLL/MoorDyn_v2.dll  		
+umk BEMRosetta MoorDyn/MoorDyn_v2 CLANGX64   +DLL  -r	.test/DLL/MoorDyn_v2.dll  		
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto MoorDyn_v2 CLANG      +DLL  -r	.test/DLL/MoorDyn_v2_32.dll  		
+umk BEMRosetta MoorDyn/MoorDyn_v2 CLANG      +DLL  -r	.test/DLL/MoorDyn_v2_32.dll  		
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
 
 @del .\*.exe /q
 
 @title Compiling MoorDyn tests 64 bits
-umk Anboto examples/MoorDyn_v1_demo_cl CLANGX64 +MOORDYN_DLL    -r	.test/MoorDyn_v1_demo_cl_DLL.exe
+umk BEMRosetta MoorDyn/examples/MoorDyn_v1_demo_cl CLANGX64 +MOORDYN_DLL    -r	.test/MoorDyn_v1_demo_cl_DLL.exe
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto examples/MoorDyn_v1_demo_cl CLANGX64                 -r	.test/MoorDyn_v1_demo_cl.exe
+umk BEMRosetta MoorDyn/examples/MoorDyn_v1_demo_cl CLANGX64                 -r	.test/MoorDyn_v1_demo_cl.exe
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto examples/MoorDyn_v1_5_demo_cl CLANGX64 +MOORDYN_DLL  -r	.test/MoorDyn_v1_5_demo_cl_DLL.exe
+umk BEMRosetta MoorDyn/examples/MoorDyn_v1_5_demo_cl CLANGX64 +MOORDYN_DLL  -r	.test/MoorDyn_v1_5_demo_cl_DLL.exe
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto examples/MoorDyn_v1_5_demo_cl CLANGX64               -r	.test/MoorDyn_v1_5_demo_cl.exe
+umk BEMRosetta MoorDyn/examples/MoorDyn_v1_5_demo_cl CLANGX64               -r	.test/MoorDyn_v1_5_demo_cl.exe
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto examples/MoorDyn_v2_demo_cl CLANGX64 +MOORDYN_DLL    -r	.test/MoorDyn_v2_demo_cl_DLL.exe
+umk BEMRosetta MoorDyn/examples/MoorDyn_v2_demo_cl CLANGX64 +MOORDYN_DLL    -r	.test/MoorDyn_v2_demo_cl_DLL.exe
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto examples/MoorDyn_v2_demo_cl CLANGX64                 -r	.test/MoorDyn_v2_demo_cl.exe
+umk BEMRosetta MoorDyn/examples/MoorDyn_v2_demo_cl CLANGX64                 -r	.test/MoorDyn_v2_demo_cl.exe
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
 
 @title Compiling MoorDyn tests 32 bits
-umk Anboto examples/MoorDyn_v1_demo_cl CLANG +MOORDYN_DLL    -r	.test/MoorDyn_v1_demo_cl_DLL_32.exe
+umk BEMRosetta MoorDyn/examples/MoorDyn_v1_demo_cl CLANG +MOORDYN_DLL    -r	.test/MoorDyn_v1_demo_cl_DLL_32.exe
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto examples/MoorDyn_v1_demo_cl CLANG                 -r	.test/MoorDyn_v1_demo_cl_32.exe
+umk BEMRosetta MoorDyn/examples/MoorDyn_v1_demo_cl CLANG                 -r	.test/MoorDyn_v1_demo_cl_32.exe
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto examples/MoorDyn_v1_5_demo_cl CLANG +MOORDYN_DLL  -r	.test/MoorDyn_v1_5_demo_cl_DLL_32.exe
+umk BEMRosetta MoorDyn/examples/MoorDyn_v1_5_demo_cl CLANG +MOORDYN_DLL  -r	.test/MoorDyn_v1_5_demo_cl_DLL_32.exe
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto examples/MoorDyn_v1_5_demo_cl CLANG               -r	.test/MoorDyn_v1_5_demo_cl_32.exe
+umk BEMRosetta MoorDyn/examples/MoorDyn_v1_5_demo_cl CLANG               -r	.test/MoorDyn_v1_5_demo_cl_32.exe
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto examples/MoorDyn_v2_demo_cl CLANG +MOORDYN_DLL    -r	.test/MoorDyn_v2_demo_cl_DLL_32.exe
+umk BEMRosetta MoorDyn/examples/MoorDyn_v2_demo_cl CLANG +MOORDYN_DLL    -r	.test/MoorDyn_v2_demo_cl_DLL_32.exe
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
-umk Anboto examples/MoorDyn_v2_demo_cl CLANG                 -r	.test/MoorDyn_v2_demo_cl_32.exe
+umk BEMRosetta MoorDyn/examples/MoorDyn_v2_demo_cl CLANG                 -r	.test/MoorDyn_v2_demo_cl_32.exe
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error compiling MoorDyn"
 
 @title Testing MoorDyn v2

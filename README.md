@@ -2,7 +2,7 @@
   Authors: Iñaki Zabala.
   -->
 
-# MoorDyn testbench and package for U++
+# MoorDyn v1 and v2 testbench and packages for U++
 **MoorDyn is an advanced mooring model, designed to analyse the behaviour of advanced stationkeeping systems for offshore floating platforms and ships.**
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
@@ -22,4 +22,4 @@ This wrapper will be maintained periodically to keep up to date with changes mad
 
 On the [Releases](https://github.com/BEMRosetta/MoorDyn/releases) page can be found 64-bit and 32-bit versions of DLLs equivalent to the official MoorDyn DLLs, along with the binary test programs.
 
-These test programs take as inputs a configuration of moorings (lines.txt) and a temporary record of platform positions (6 degrees of freedom). With both, they perform a simulation with MoorDyn v1 (MoorDyn_v1_test.exe) or MoorDyn v2 (MoorDyn_v2_test.exe). Remember that each of the executables requires a lines file in the corresponding version.
+These test programs take as inputs a configuration of moorings (lines.txt) and a temporary record of platform positions (6 degrees of freedom). With both, they perform a simulation with MoorDyn v1 (MoorDyn_v1_test.exe) or MoorDyn v2 (MoorDyn_v2_test.exe). Remember that each of the executables requires a lines file in the corresponding version. Before launching the binaries, please give them permission for Windows to allow it.

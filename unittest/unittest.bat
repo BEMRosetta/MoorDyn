@@ -84,6 +84,6 @@ MoorDyn_v1_demo_cl_32                                       ../../examples/MoorD
 MoorDyn_v1_5_demo_cl_32                                     ../../examples/MoorDyn_v1_5_demo_cl/mooring/lines.txt    ../../examples/MoorDyn_v1_5_demo_cl/mooring/positions.csv -16.98526242 0 -10.25623606
 @IF %ERRORLEVEL% NEQ 0 PAUSE "Error testing MoorDyn"
 
-
+rem The binaries to be published
 copy MoorDyn_v1_demo_cl.exe MoorDyn_v1_test.exe
 copy MoorDyn_v1_5_demo_cl.exe MoorDyn_v2_test.exe

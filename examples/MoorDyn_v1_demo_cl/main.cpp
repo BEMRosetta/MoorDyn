@@ -197,6 +197,9 @@ CONSOLE_APP_MAIN
 		if (command.size() > cid)
 			dz = ScanDouble(command[cid++]);
 
+		if (!IsNum(dx) || !IsNum(dy) || !IsNum(dz))
+			throw Exc("Wrong position values");
+
 		UVector<double> tm;
 		UVector<UVector<double>> positions, velocities;
 	

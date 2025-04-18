@@ -20,14 +20,14 @@ using namespace Upp;
 
 #ifdef WIN32
 /// Console handle
-extern int hConHandle;
+/*extern*/ int hConHandle;
 /// Std output handle
-extern intptr_t lStdHandle;
+/*extern*/ intptr_t lStdHandle;
 
 /// pointer to be made to environment variable PROMPT
-extern char const* PromptPtr;
+/*extern*/ char const* PromptPtr;
 /// 0 if the system console is used, 1 if the console has been created by us
-extern int OwnConsoleWindow;
+/*extern*/ int OwnConsoleWindow;
 #endif
 
 extern MoorDyn md_singleton;

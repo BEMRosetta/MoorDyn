@@ -150,6 +150,7 @@ double GetOutput(OutChanProps outChan)
 		return LineList[outChan.ObjID-1].GetLineOutput(outChan);
 	else if (outChan.OType == 2)   // connection type
 		return ConnectList[outChan.ObjID-1].GetConnectionOutput(outChan);
+	return 0;
 }
 
 // write all the output files for the current timestep

@@ -75,7 +75,7 @@ bool Demo(String linesPath) {
 		        throw Exc("MoorDyn_GetNumberLines");
 		    
 		    for (unsigned int line_id = 1; line_id <= n_lines; line_id++) {
-		        Cout() << Format("Line %d\n", (int)line_id);
+		        Cout() << F("Line %d\n", (int)line_id);
 		        
 		        MoorDynLine line = MoorDyn_GetLine(system, line_id);
 		        if (!line)
@@ -86,22 +86,22 @@ bool Demo(String linesPath) {
 		        	throw Exc("MoorDyn_GetLineNumberNodes");
 		        
 		        for (unsigned int inod = 0; inod < n_nodes; inod++) {
-		            Cout() << Format("node %d:\t", (int)inod);
+		            Cout() << F("node %d:\t", (int)inod);
 		            double pos[3], ten[3];
 		            
 		            if (MoorDyn_GetLineNodePos(line, inod, pos) != MOORDYN_SUCCESS)
 		            	throw Exc("MoorDyn_GetLineNodePos");
-		            Cout() << Format("pos = [%g, %g, %g]\t", pos[0], pos[1], pos[2]);
+		            Cout() << F("pos = [%g, %g, %g]\t", pos[0], pos[1], pos[2]);
 	
 		            if (MoorDyn_GetLineNodeTen(line, inod, ten) != MOORDYN_SUCCESS)
 		                throw Exc("MoorDyn_GetLineNodeTen");
-		            Cout() << Format("ten = [%g, %g, %g]  %g\n", ten[0], ten[1], ten[2], sqrt(sqr(ten[0]) + sqr(ten[1]) + sqr(ten[2])));
+		            Cout() << F("ten = [%g, %g, %g]  %g\n", ten[0], ten[1], ten[2], sqrt(sqr(ten[0]) + sqr(ten[1]) + sqr(ten[2])));
 		        }
 				double tens;
 				if (MoorDyn_GetLineFairTen(line, &tens) != MOORDYN_SUCCESS)
 		        	throw Exc("MoorDyn_GetLineFairTen");
 		        
-				Cout() << Format("fairtens = [%g]\n", tens);
+				Cout() << F("fairtens = [%g]\n", tens);
 				tensions << tens;
 		    }
 	    }
@@ -184,7 +184,7 @@ CONSOLE_APP_MAIN
 	
 		// Setting mooring folder
 		if (!RealizeDirectory(AFX(GetExeFolder(), "mooring")))
-			throw Exc(Format("Error creating 'mooring' folder: %s", GetLastErrorMessage()));
+			throw Exc(F("Error creating 'mooring' folder: %s", GetLastErrorMessage()));
 		
 		String linesPath;
 		if (!IsTheIDE()) {
@@ -197,7 +197,7 @@ CONSOLE_APP_MAIN
 	
 		String newLinesPath = AFX(GetExeFolder(), "mooring/lines.txt");
 		if (!FileCopy(linesPath, newLinesPath))
-			throw Exc(Format("Error copying 'lines' file  from '%s' to '%s': %s", linesPath, newLinesPath, GetLastErrorMessage()));
+			throw Exc(F("Error copying 'lines' file  from '%s' to '%s': %s", linesPath, newLinesPath, GetLastErrorMessage()));
 		linesPath = newLinesPath;
 		
 		Cout() << "<path to mooring definition (previously called 'lines.txt')>\n";

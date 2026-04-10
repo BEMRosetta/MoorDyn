@@ -115,7 +115,7 @@ int LinesInit(double X[], double XD[]) noexcept {
     }
 
 	if ((int)fairleadIds.size()*3 != (int)ndof) {
-		std::cout << ~Format("Number of dof %d mismatch with the number of fairleads %d", (int)ndof, fairleadIds.size());
+		std::cout << ~F("Number of dof %d mismatch with the number of fairleads %d", (int)ndof, fairleadIds.size());
 		return MOORDYN_UNHANDLED_ERROR;	
 	}
 	

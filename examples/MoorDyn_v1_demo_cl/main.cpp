@@ -160,7 +160,7 @@ CONSOLE_APP_MAIN
 		
 		// Setting mooring folder
 		if (!RealizeDirectory(AFX(GetExeFolder(), "mooring")))
-			throw Exc(Format("Error creating 'mooring' folder: %s", GetLastErrorMessage()));
+			throw Exc(F("Error creating 'mooring' folder: %s", GetLastErrorMessage()));
 		
 		// Setting 'lines.txt'
 		Cout() << "<path to 'lines.txt'> ";
@@ -173,7 +173,7 @@ CONSOLE_APP_MAIN
 		}
 		RealizeDirectory(AFX(GetExeFolder(), "mooring"));	
 		if (!FileCopy(linesPath, AFX(GetExeFolder(), "mooring/lines.txt")))
-			throw Exc(Format("Error copying 'lines' file: %s", GetLastErrorMessage()));
+			throw Exc(F("Error copying 'lines' file: %s", GetLastErrorMessage()));
 					
 		// Setting 'positions.csv'			
 		Cout() << "<path to 'positions.csv'> ";
@@ -185,7 +185,7 @@ CONSOLE_APP_MAIN
 				throw Exc("Path to positions.csv file not found");
 		}
 		if (!FileCopy(positionsPath, AFX(GetExeFolder(), "mooring/positions.csv")))
-			throw Exc(Format("Error copying 'positions' file: %s", GetLastErrorMessage()));
+			throw Exc(F("Error copying 'positions' file: %s", GetLastErrorMessage()));
 	
 		// Translation to the positions.csv file
 		Cout() << "<translation x> <translation y> <translation z> ";				
